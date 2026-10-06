@@ -1,7 +1,32 @@
 # 我的 Kickstart 自訂設定
 
-依據 Git 提交 `fdf382f` 與其前一版 `16dd8f5` 的差異整理。
-整理時工作目錄沒有未提交的改動；`lua/custom/plugins/init.lua` 原本是空的。
+這份文件記錄個人新增、啟用與註解掉的設定，供更新 Kickstart 時對照。
+最後核對日期：2026-10-06；比對基準為本機已抓取的 `upstream/lazy`。
+之後手動修改設定時，也請同步更新這份清單。
+
+## 手動啟用或註解的項目
+
+| 檔案 | 個人修改 | 用途／更新時要保留的內容 |
+| --- | --- | --- |
+| `init.lua` | 取消註解 `{ import = 'custom.plugins' },` | 在 Lazy 外掛清單中載入個人設定；目前相對上游唯一的 `init.lua` 修改 |
+| `.gitignore` | 將 `lazy-lock.json` 改成 `# lazy-lock.json` | 不再忽略版本鎖定檔，讓 Git 保存外掛版本 |
+| `lua/custom/plugins/init.lua` | 新增 `require 'custom.options'` | 載入個人編輯器選項；保留 `return {}`，供 Lazy 匯入 |
+
+目前沒有額外手動註解掉的上游功能。以下是現有停用項目，
+與 `upstream/lazy` 相同，不是個人新增的停用修改：
+
+- `kickstart.plugins.debug`、`indent_line`、`lint`、`neo-tree` 和
+  `gitsigns` 範例仍保持註解；其中 `gitsigns` 指額外快捷鍵範例，
+  主設定本身仍載入 gitsigns 外掛。
+- `kickstart.plugins.autopairs` 範例保持註解，但已透過自己的
+  `lua/custom/plugins/autopairs.lua` 啟用自動補括號。
+- 儲存時格式化的 `enabled_filetypes` 目前是空表，因此所有語言均未
+  啟用儲存時自動格式化；可用 `<leader>f` 手動格式化。
+- 上游的 Lua `stylua` 格式化器設定目前未啟用，Lua LSP 格式化亦被停用。
+  Python 的 `isort`、`black` 則由個人設定加入。
+
+這次合併上游帶入上述格式化行為；若要恢復儲存時格式化，
+需在 `enabled_filetypes` 啟用對應語言，並確認格式化器已設定及安裝。
 
 ## 設定放在哪裡
 
@@ -19,6 +44,15 @@
 例如在 `:Mason` 中安裝 `isort` 與 `black`。原本設定並沒有自動安裝這兩個工具。
 
 ## 更新 Kickstart 後
+
+合併後可用下列命令，核對目前直接改動了哪些上游檔案：
+
+```sh
+git diff upstream/lazy -- init.lua .gitignore lua/custom/plugins/init.lua
+```
+
+另外確認下表列出的個人新增檔案與 `lazy-lock.json` 仍在。
+Git 通常會保留自己的提交，但合併衝突或上游 API 變動仍需人工處理。
 
 保留 `lua/custom/` 和 `ftplugin/`，並確認 `init.lua` 的
 `require('lazy').setup({ ... })` 外掛清單末尾有這一行：
