@@ -64,8 +64,11 @@ git push origin master
 
 ```sh
 git fetch upstream
-git merge upstream/master
+git merge upstream/lazy
 ```
+
+目前使用上游保留 Lazy 的 `lazy` 分支；`upstream/master` 已改用
+`vim.pack`，若要切換需一併遷移自訂外掛設定。
 
 若有衝突，整理衝突檔案後用 `git add` 和 `git commit` 完成合併；
 也可用 `git merge --abort` 取消此次合併。確認 Neovim 正常後，
