@@ -7,6 +7,7 @@
 
 | 設定 | 檔案 |
 | --- | --- |
+| 搜尋預設忽略大小寫，包含大寫字母時區分大小寫 | `lua/custom/options.lua` |
 | 安裝並啟用 C/C++ 的 `clangd`、Python 的 `pyright` | `lua/custom/plugins/languages.lua` |
 | Python 格式化依序使用 `isort`、`black` | `lua/custom/plugins/languages.lua` |
 | 插入模式自動補括號、引號 | `lua/custom/plugins/autopairs.lua` |
@@ -30,6 +31,8 @@
 外掛清單之外，也不需要另外 `require` `languages.lua` 或 `autopairs.lua`。
 新增外掛可放在 `lua/custom/plugins/`；檔案需回傳 Lazy 的外掛規格。
 `ftplugin/c.vim` 會由 Neovim 自動載入，不需要額外引用。
+一般編輯器選項可放在 `lua/custom/options.lua`；目前由
+`lua/custom/plugins/init.lua` 載入，因此仍只需要上述一行匯入。
 
 使用 Git 合併 upstream 更新可以保留自己的新增檔案；若要重新下載或整份取代
 設定目錄，請先備份上述目錄，再還原並補上匯入行。
@@ -47,16 +50,23 @@ Neovim 的 `ftplugin/` 目錄。要讓其他專案使用此樣式，請將這份
 
 ## Git 備份
 
-自訂設定、`ftplugin/` 與 `lazy-lock.json` 都納入此儲存庫。
-`backups/bash/.bashrc` 是 `~/.bashrc` 的備份副本，不會自動同步。
-修改 Bash 設定後，在此儲存庫目錄執行：
+Neovim 設定直接由目前的 Kickstart fork 管理，不需要複製到另一份儲存庫。
+修改設定後，在 `~/.config/nvim` 目錄確認變動並提交：
 
 ```sh
-cp ~/.bashrc backups/bash/.bashrc
+git diff
 git add -A
-git commit -m "Back up personal configuration"
+git commit -m "Update personal Neovim configuration"
 git push origin master
 ```
 
-還原 Bash 設定前，先另外保存當時的 `~/.bashrc`，再將
-`backups/bash/.bashrc` 複製到 `~/.bashrc`。
+更新 Kickstart 前先提交自己的改動，再執行：
+
+```sh
+git fetch upstream
+git merge upstream/master
+```
+
+若有衝突，整理衝突檔案後用 `git add` 和 `git commit` 完成合併；
+也可用 `git merge --abort` 取消此次合併。確認 Neovim 正常後，
+執行 `git push origin master`。Bash 設定另行管理。

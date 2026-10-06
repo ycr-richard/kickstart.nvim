@@ -5,4 +5,7 @@
 
 ---@module 'lazy'
 ---@type LazySpec
+-- Load personal editor options through the existing custom.plugins import.
+require 'custom.options'
+
 return {}
